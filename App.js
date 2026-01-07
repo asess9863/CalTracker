@@ -1,20 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, Alert } from 'react-native';
 
-export default function App() {
+const App = () => {
+  const handlePress = () => {
+    Alert.alert('Button Pressed');
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Hello World!</Text>
+      <Text>Press to Log in</Text>
       <StatusBar style="auto" />
+      <Button
+        title="Log In"
+        onPress={handlePress}
+        color={'#000000ff'}
+      />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    backgroundColor: '#ffffffff',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 });
+
+export default App;

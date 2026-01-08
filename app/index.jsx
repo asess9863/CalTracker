@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, StyleSheet, Alert, TextInput, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Link } from 'expo-router';
+import { Link, router} from 'expo-router';
 
 const Login = () => {
 
@@ -12,15 +12,13 @@ const Login = () => {
   const [Passtext, onChangePassText] = React.useState('');
 
   function LoginAttempt() {
-    let Redirect = false;
     if (username === Usertext && password === Passtext) {
       console.log('Redirecting...');
-      Redirect = true;
+      router.push('/Home');
     }
     else {
-      Alert.alert('incorrect username or password.');
+      router.push('/');
     }
-    return Redirect;
   }
   return (
     <SafeAreaProvider>
@@ -45,9 +43,9 @@ const Login = () => {
           />
           <Button
             title='Log In'
-            onPress={() => auth = LoginAttempt()}
+            onPress={() => LoginAttempt()}
           />
-          <Link href={"/Home"} style={styles.link}>Continue as a guest</Link>
+          <Link href={"/CreateUser"} style={styles.link}>Register</Link>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

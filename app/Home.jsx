@@ -15,7 +15,7 @@ const Home = () => {
             <View style={styles.imageLocation}>
                 <Image
                     style={styles.image}
-                    source={require('../assets/image.png')}
+                    source={require('../assets/HomeIcon.png')}
                 />
             </View>
         </SafeAreaProvider>

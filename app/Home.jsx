@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, StyleSheet, Alert, TextInput, Text, View, Image } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
@@ -17,6 +16,9 @@ const Home = () => {
                     style={styles.image}
                     source={require('../assets/HomeIcon.png')}
                 />
+            </View>
+            <View>
+                <Link href={"/CustomFoods"} style={styles.link}> create a Custom food </Link>
             </View>
         </SafeAreaProvider>
     );

@@ -3,16 +3,17 @@ import { Button, StyleSheet, TextInput, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router} from 'expo-router';
 import CustomFoods from './CustomFoods.jsx'
+import { Dropdown } from 'react-native-element-dropdown'
 
 const CreateFood = () => { 
+    let FoodList = [];
     const [ProteinText, onChangeProteinText] = React.useState('');
     const [CarbText, onChangeCarbText] = React.useState('');
     const [FatText, onChangeFatText] = React.useState('');
     const [FoodNameText, onChangeFoodNameText] = React.useState('');
 
     function FoodCreate(){
-        const CustomFood = new CustomFoods(Number(ProteinText), Number(CarbText), Number(FatText), FoodNameText);
-        let FoodList = [];
+        const CustomFood = new CustomFoods(Number(ProteinText), Number(CarbText), Number(FatText), FoodNameText)
         FoodList.push(CustomFood);
     }
     return(
@@ -54,6 +55,15 @@ const CreateFood = () => {
                       title='Create Food'
                       onPress={() => FoodCreate()}
                     />
+                    <Link style={styles.link} href={'/Home'}> Go home </Link>
+
+                    <Dropdown
+                        style={styles.Dropdown}
+                        placeholder='Please choose from a food'
+                        placeholderTextColor={'white'}
+                        data={FoodList}
+                        maxHeight={300}
+                    />
                 </View>
             </SafeAreaView>
         </SafeAreaProvider>
@@ -87,6 +97,9 @@ const styles = StyleSheet.create({
     marginTop: 12,
     color: 'white',
   },
+  Dropdown: {
+    color: 'white'
+  }
 });
 
 export default CreateFood;

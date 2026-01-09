@@ -18,7 +18,7 @@ const Home = () => {
                 />
             </View>
             <View>
-                <Link href={"/CustomFoods"} style={styles.link}> create a Custom food </Link>
+                <Link href={"/CreateFood"} style={styles.link}>Create Food</Link>
             </View>
         </SafeAreaProvider>
     );

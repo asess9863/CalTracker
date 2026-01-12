@@ -5,8 +5,8 @@ import { Link, router} from 'expo-router';
 
 const Login = () => {
 
-  let username = 'Asessions28';
-  let password = 'P@$$w0rd';
+  let username = 'Adam';
+  let password = '1234';
   let auth = false;
   const [Usertext, onChangeUserText] = React.useState('');
   const [Passtext, onChangePassText] = React.useState('');

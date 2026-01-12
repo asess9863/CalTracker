@@ -6,6 +6,11 @@ export default function RootLayout()
   // create loacations inside of the stack, called stackScreen objects
   // that hold the name of the place that we are being routed to
   return(
+    SplashScreen.SetOptions
+    ({
+        duration: 1000,
+        fade: true,
+    }),
     <Stack>
       <StackScreen name="index"/>
       <StackScreen name="Home"/>

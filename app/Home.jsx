@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Alert, TextInput, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
 import ImageButton from './ImageButton.jsx';

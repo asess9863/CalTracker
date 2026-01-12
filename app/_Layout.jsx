@@ -1,19 +1,12 @@
 import { Stack } from 'expo-router';
 
-// a function to create a navigation stack that will hold all of the directions to the desired location
-export default function RootLayout()
-{
-  // create loacations inside of the stack, called stackScreen objects
-  // that hold the name of the place that we are being routed to
-  return(
-    SplashScreen.SetOptions
-    ({
-        duration: 1000,
-        fade: true,
-    }),
+export default function RootLayout() {
+  return (
     <Stack>
-      <StackScreen name="index"/>
-      <StackScreen name="Home"/>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(Tabs)/Home" />
+      <Stack.Screen name="BarcodeScan" />
+      <Stack.Screen name="(Tabs)/FindAFood" />
     </Stack>
-  )
+  );
 }

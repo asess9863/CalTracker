@@ -14,14 +14,22 @@
       "backgroundColor": "black"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#black"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.CAMERA"
+      ],
+      "package": "com.anonymous.CalTracker"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,6 +42,12 @@
           "backgroundColor": "#232323",
           "image": "./assets/icon.png",
           "imageWidth": 200
+        }
+      ],
+      [
+        "react-native-scanbot-barcode-scanner-sdk",
+        {
+          "licenseKey": ""
         }
       ]
     ]

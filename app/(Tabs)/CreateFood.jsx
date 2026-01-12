@@ -1,12 +1,9 @@
 import React from 'react';
 import { Button, StyleSheet, TextInput, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Link, router} from 'expo-router';
-import CustomFoods from './CustomFoods.jsx'
-import { Dropdown } from 'react-native-element-dropdown'
+import { Link } from 'expo-router';
 
-const CreateFood = () => { 
-    let FoodList = [];
+const CreateFood = () => {
     const [ProteinText, onChangeProteinText] = React.useState('');
     const [CarbText, onChangeCarbText] = React.useState('');
     const [FatText, onChangeFatText] = React.useState('');
@@ -56,14 +53,6 @@ const CreateFood = () => {
                       onPress={() => FoodCreate()}
                     />
                     <Link style={styles.link} href={'/Home'}> Go home </Link>
-
-                    <Dropdown
-                        style={styles.Dropdown}
-                        placeholder='Please choose from a food'
-                        placeholderTextColor={'white'}
-                        data={FoodList}
-                        maxHeight={300}
-                    />
                 </View>
             </SafeAreaView>
         </SafeAreaProvider>

@@ -1,24 +1,25 @@
-import { Pressable, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet } from 'react-native';
 
-const ImageButton = ({ source, onPress, style }) => {
-  return (
-    <Pressable onPress={onPress} style={({ pressed }) => [
-      {
-        opacity: pressed ? 0.6 : 1, // Visual feedback when pressed
-      },
-      style, // Apply custom styles passed as props
-    ]}>
-      <Image source={source} style={styles.image} />
-    </Pressable>
-  );
-};
+export default function ImageButton({ onPress })
+{
+    return(
+        <TouchableOpacity onPress={onPress} style={styles.button}>
+            <Image
+                source= {"../assets/BackButton.png"}
+                style={styles.image}
+            />
+        </TouchableOpacity>
+    );
+}
 
 const styles = StyleSheet.create({
+  button: {
+    width: 80,
+    height: 80,
+  },
   image: {
-    width: 50,
-    height: 50,
-    // Add other image styles like borderRadius, resizeMode, etc.
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
   },
 });
-
-export default ImageButton;

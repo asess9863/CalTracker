@@ -1,9 +1,13 @@
 import React from 'react';
-import { Button, StyleSheet, Alert, TextInput, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
+import ImageButton from './ImageButton.jsx';
 
 const Home = () => {
+    function HomeDirect(){
+        console.log('Pressed...');
+    }
     return (
         <SafeAreaProvider>
             <SafeAreaView style={styles.container}>
@@ -13,10 +17,10 @@ const Home = () => {
                 <Link href={"/"} style={styles.link}>back to login</Link>
             </SafeAreaView>
             <View style={styles.imageLocation}>
-                <Image
-                    style={styles.image}
+                <ImageButton 
+                    style={styles.image} 
                     source={require('../assets/HomeIcon.png')}
-                />
+                    onPress={() => {HomeDirect()}}/>
             </View>
         </SafeAreaProvider>
     );

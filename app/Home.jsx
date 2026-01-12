@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
@@ -21,6 +20,9 @@ const Home = () => {
                     style={styles.image} 
                     source={require('../assets/HomeIcon.png')}
                     onPress={() => {HomeDirect()}}/>
+            </View>
+            <View>
+                <Link href={"/CreateFood"} style={styles.link}>Create Food</Link>
             </View>
         </SafeAreaProvider>
     );

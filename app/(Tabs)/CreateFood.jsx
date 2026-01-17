@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, StyleSheet, TextInput, Text, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
+import CustomFoods from '../CustomFoodsClass'
 
 const CreateFood = () => {
     const [ProteinText, onChangeProteinText] = React.useState('');
@@ -11,6 +12,7 @@ const CreateFood = () => {
 
     function FoodCreate(){
         const CustomFood = new CustomFoods(Number(ProteinText), Number(CarbText), Number(FatText), FoodNameText)
+        FoodList = [];
         FoodList.push(CustomFood);
     }
     return(

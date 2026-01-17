@@ -2,6 +2,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function BarcodeScan() {
     const [permission, requestPermission] = useCameraPermissions();
@@ -60,10 +61,10 @@ export default function BarcodeScan() {
 
             {/* Cancel button */}
             <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => router.push('/(tabs)/FindAFood')}
+                style={styles.imageButton}
+                onPress={() => router.push('/FindAFood')}
             >
-                <Text style={styles.cancelText}>Cancel</Text>
+                <AntDesign name="arrow-left" size={24} color="white" />
             </TouchableOpacity>
 
         </View>

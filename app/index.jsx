@@ -45,6 +45,7 @@ const Login = () => {
             title='Log In'
             onPress={() => LoginAttempt()}
           />
+          <Link style={styles.link} href={"/TestingFoodDatabase"}>Test Database </Link>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>

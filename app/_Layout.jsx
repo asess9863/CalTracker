@@ -8,6 +8,7 @@ export default function RootLayout() {
       <Stack.Screen name="BarcodeScan" />
       <Stack.Screen name="(Tabs)/FindAFood" />
       <Stack.Screen name="TestingFoodDatabase" />
+      <Stack.Screen name="(scanner)/[barcode]" />
     </Stack>
   );
 }

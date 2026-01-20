@@ -1,42 +1,43 @@
 import  React  from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { router } from 'expo-router'
 import AppButton from '../AppButton';
 
 export default function FindAFood(){
     
-    const [Foodtext, onChangeFoodText] = React.useState('')
+    const [Foodtext, SetFoodText] = React.useState('')
 
-      function SearchAttempt() {
-        console.log('Searching...');
-      }
+    function SearchAttempt() {
+      router.push(`../search/${Foodtext}`)
+    }
 
-      function BarCodeRedirect() {
-        router.push('/BarcodeScan');
-      }
-        return(
-            <View style={styles.container}>
-                <Text style={styles.title}>
-                    Search for a Food
-                </Text>
-                <TextInput
-                  style={styles.input}
-                  placeholderTextColor={'#ffffffff'}
-                  onChangeText={onChangeFoodText}
-                  placeholder='Enter A Food'
-                  value={Foodtext}
+    function BarCodeRedirect() {
+      router.push('/BarcodeScan');
+    }
+    
+    return(
+        <View style={styles.container}>
+            <Text style={styles.title}>
+                Search for a Food
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor={'#ffffffff'}
+              onChangeText={SetFoodText}
+              placeholder='Enter A Food'
+              value={Foodtext}
+            />
+            <AppButton 
+                title='Search'
+                onPress={() => SearchAttempt()}
+            />
+            <View style={{padding: 24}}>
+                <AppButton
+                    title='Use Barcode Scanner'
+                    onPress={() => BarCodeRedirect()}
                 />
-                <AppButton 
-                    title='Search'
-                    onPress={() => SearchAttempt()}
-                />
-                <View style={{padding: 24}}>
-                    <AppButton
-                        title='Use Barcode Scanner'
-                        onPress={() => BarCodeRedirect()}
-                    />
-                </View>
             </View>
+        </View>
     );
 }
 

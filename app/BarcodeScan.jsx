@@ -23,16 +23,6 @@ export default function BarcodeScan() {
             </View>
         );
     }
-    async function lookupFood(barcode) {
-        const res = await fetch(
-            `https://world.openfoodfacts.org/api/v2/product/${barcode}.json`
-        );
-        const data = await res.json();
-
-        if (data.status === 1) {
-            console.log("Food:", data.product.product_name);
-        }
-    }
 
     const handleBarcodeScanned = ({ data }) => {
         if (scanned) return;   // prevent multiple scans
@@ -40,9 +30,7 @@ export default function BarcodeScan() {
         setScanned(true);
         console.log("Scanned barcode:", data);
 
-        lookupFood(data);
-
-        router.push('/FindAFood');
+        router.push(`scanner/${data}`)
     };
 
     return (

@@ -28,25 +28,22 @@ def Query(query):
     return result
 
 # starting page/ the only page that I have
-@app.route('/Testing', methods=['GET','POST'])
+@app.route('/search', methods=['GET','POST'])
 # function for loading/working within the page
 def index():
     # if we call a posting function from the page then we do this
     if request.method == "POST":
         # get input from page
         data = request.get_json(force=True)
+        print("Incoming JSON:", data)
         Food = data.get('title')
+        print(Food)
         # SQL Query for food name
         sql = f"SELECT * FROM food WHERE Name = \"{Food}\""
         # two dimensional tuple so we need to go into the first result to get real data
         results = Query(sql)
+        print(results)
         row = results[0]
-        id = row[0]
-        name = row[1]
-        calories = row[2]
-        protein = row[3]
-        carbs = row[4]
-        fats = row[5]
         return jsonify({
             "message": "Food received",
             "food": {

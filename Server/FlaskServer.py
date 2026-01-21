@@ -28,9 +28,9 @@ def Query(query):
     return result
 
 # starting page/ the only page that I have
-@app.route('/search', methods=['GET','POST'])
+@app.route('/search', methods=['POST'])
 # function for loading/working within the page
-def index():
+def Search():
     # if we call a posting function from the page then we do this
     if request.method == "POST":
         # get input from page
@@ -58,6 +58,24 @@ def index():
     else:
         return jsonify({"error": "Invalid data format or missing 'title' key"}), 400
 
+@app.route('/Sum', methods=['POST'])
+def Sum():
+    data = request.get_json()
+    print("Incoming JSON: ", data)
+    UserName = data.get('UserName')
+    print(UserName)
+    sql = f"""SELECT *
+          FROM food AS F
+          JOIN servings AS S ON F.FoodID = S.FoodID
+          JOIN composed AS C ON S.ServingID = C.ServingID
+          JOIN interactions AS I ON C.InteractionID = I.InteractionID
+          JOIN user AS U ON i.UserID = U.UserID
+          WHERE U.UserName = \"{UserName}\";"""
+    results = Query(sql)
+    print (results)
+    return(jsonify({
+        "Results": results
+    }))
 # run app
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5000)

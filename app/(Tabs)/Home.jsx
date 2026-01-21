@@ -1,11 +1,41 @@
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Alert } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
 
 const Home = () => {
-    function HomeDirect(){
-        router.push('/Home');
-    }
+    async function Sum() {
+		try {
+			const response = await fetch("http://10.0.0.157:5000/Sum",
+				{ 
+					method: "POST", 
+					headers: {
+						'Content-type': 'application/json',
+						"Accept": "application/json"
+					},
+					body: JSON.stringify({ UserName: 'Adam' })
+				}
+			)
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			else
+			{
+				const result = await response.json();
+				Alert.alert('Success', 'Data sent and response received!')
+				setSummedData(result.food);
+				setSuccess(true);
+			}
+		}
+		catch (error) {
+			console.error('Error sending data to Flask: ', error);
+			Alert.alert("Error", "Failed to connect to server");
+		}
+	}
+
+    useEffect(() => {Sum()});
+    
+
     return (
         <SafeAreaProvider>
             <SafeAreaView style={styles.container}>

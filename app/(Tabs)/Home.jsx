@@ -9,7 +9,7 @@ const Home = () => {
 
     async function Sum() {
 		try {
-			const response = await fetch("http://10.0.0.157:5000/Sum",
+			const response = await fetch("http://10.7.41.135:5000/Sum",
 				{ 
 					method: "POST", 
 					headers: {

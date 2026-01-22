@@ -72,7 +72,7 @@ def Sum():
         FROM Servings AS S
         JOIN Food AS F ON S.FoodID = F.FoodID
         JOIN Composed AS C ON C.ServingID = S.ServingID
-        JOIN Interactions AS I ON C.InteractionID = I.InteractionID
+        JOIN Interactions AS I ON C.InteractionID
         WHERE I.UserID = 1;
     """
     Results = Query(sql)
@@ -92,6 +92,25 @@ def CreateFood():
             VALUES (\"{data.get('Name')}\",{data.get('Calories')},{data.get('Protein')},{data.get('Carbs')},{data.get('Fats')})
            """
     Results = Query(sql)
+    return(jsonify({
+        "Message": "Success"
+    }))
+
+@app.route('/logFood', methods=['POST'])
+def Logger():
+    data = request.get_json()
+    Name = data.get("Name")
+    print("Incoming Data: ", data)
+    FoodNumber = f""" SELECT FoodID FROM Food WHERE Name = \"{Name}\" """
+    FoodResult = Query(FoodNumber)
+    print(FoodResult[0][0])
+    sql = f"""
+            INSERT INTO Interactions (UserID) VALUES (1);
+            SELECT LAST_INSERT_ID() AS InterID;
+            INSERT INTO Servings (AmountAte, FoodID) VALUES ({data.get("Servings")}, {FoodResult});
+            SELECT LAST_INSERT_ID() AS ServingID;
+            INSERT INTO Composed (InteractionID, ServingID) VALUES (InterID, ServingID)
+           """
     return(jsonify({
         "Message": "Success"
     }))

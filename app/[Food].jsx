@@ -3,16 +3,48 @@ import { StyleSheet, Text, Alert, View, TouchableOpacity, TextInput } from 'reac
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import AppButton from './AppButton';
 
 const logFood = () => {
-    const { Food } = useLocalSearchParams();
+
+	const { Food } = useLocalSearchParams();
     const [ServingsText, SetServingsText] = useState('')
+	const [FoodData, SetFoodData] = useState(null)
+	const [Success, setSuccess] = useState(false)
+
+	async function CallFoodLog(){
+		try {
+			console.log(Food)
+			const response = await fetch("http://10.7.41.135:5000/logFood",
+				{ 
+					method: "POST", 
+					headers: {
+						'Content-type': 'application/json',
+						"Accept": "application/json"
+					},
+					body: JSON.stringify({ Name: Food, Servings: ServingsText })
+				}
+			)
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			else
+			{
+				const result = await response.json();
+				Alert.alert('Success', 'Data sent and response received!')
+				SetFoodData(result.food);
+				setSuccess(true);
+			}
+		}
+		catch (error) {
+			console.error('Error sending data to Flask: ', error);
+			Alert.alert("Error", "Failed to connect to server");
+		}
+	}
     return(
         <SafeAreaProvider>
             <View style={styles.container}>
                 <AntDesign name="arrow-left" size={24} color="white" />
-            </View>
-            <View style={styles.Topcontainer}>
                 <Text style={styles.title}> Logging { Food } </Text>
                 <TextInput
                     style={styles.input}
@@ -21,6 +53,7 @@ const logFood = () => {
                     placeholder='Enter Servings Eaten'
                     value={ServingsText}
                 />
+				<AppButton title='Log Food'onPress={() => CallFoodLog()}/>
             </View>
         </SafeAreaProvider>
     )

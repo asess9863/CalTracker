@@ -13,7 +13,6 @@ export default function TabsLayout() {
 
  }}
   >
-    <Tabs.Screen name="CustomFood" options={{title: 'Log a Custom Food'}}/>
     <Tabs.Screen name="FindAFood" options={{ title: 'Find A Food'}}/>
     <Tabs.Screen name="Home" options={{ title: 'Home'}}/>
     <Tabs.Screen name="CreateFood" options={{ title: 'Create A Food'}}/>

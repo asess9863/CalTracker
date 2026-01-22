@@ -89,7 +89,7 @@ def CreateFood():
     print("Incoming Data: ", data)
     sql = f"""
             INSERT INTO Food (Name, Calories, Protein, Carbs, Fats) 
-            VALUES (\"{data.get('Name')}\",{data.get('calories')},{data.get('protein')},{data.get('carbs')},{data.get('fats')})
+            VALUES (\"{data.get('Name')}\",{data.get('Calories')},{data.get('Protein')},{data.get('Carbs')},{data.get('Fats')})
            """
     Results = Query(sql)
     return(jsonify({

@@ -4,11 +4,11 @@ export default function RootLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(Tabs)/Home" />
-      <Stack.Screen name="BarcodeScan" />
-      <Stack.Screen name="(Tabs)/FindAFood" />
-      <Stack.Screen name="TestingFoodDatabase" />
-      <Stack.Screen name="(scanner)/[barcode]" />
+      <Stack.Screen name="(Tabs)/Home" options={{ headerShown: false }} />
+      <Stack.Screen name="BarcodeScan" options={{ headerShown: false }} />
+      <Stack.Screen name="(Tabs)/FindAFood" options={{ headerShown: false }} />
+      <Stack.Screen name="(search)/[search]" options={{ headerShown: false }} />
+      <Stack.Screen name="(scanner)/[barcode]" options={{ headerShown: false }} />
     </Stack>
   );
 }

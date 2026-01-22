@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, StyleSheet, TextInput, Text, View, Alert } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Link } from 'expo-router';
-import CustomFoods from '../CustomFoodsClass'
+
 
 const CreateFood = () => {
     const [ProteinText, onChangeProteinText] = useState('');
@@ -12,21 +11,20 @@ const CreateFood = () => {
     const [Success, setSuccess] = useState(false)
 
     async function FoodCreate(){
-        const CustomFood = new CustomFoods(Number(ProteinText), Number(CarbText), Number(FatText), FoodNameText)
         try {
-              const response = await fetch("http://10.7.41.135:5000/CreateFood",
+              const response = await fetch("http://10.0.0.157:5000/CreateFood",
                 { 
                   method: "POST", 
                   headers: {
                     'Content-type': 'application/json',
                     "Accept": "application/json"
                   },
-                  body: JSON.stringify({ "Name" : CustomFood.getName(),
-                                         "Calories" : CustomFood.getCalories(),
-                                         "Protein" : CustomFood.getProtein(),
-                                         "Carbs" : CustomFood.getCarbs(),
-                                         "Fats" : CustomFood.getFats()
-                   })
+                  body: JSON.stringify({ "Name" : FoodNameText,
+                                         "Calories" : Number(ProteinText)*4 + Number(CarbText)*4 + Number(FatText)*9,
+                                         "Protein" : Number(ProteinText),
+                                         "Carbs" : Number(CarbText),
+                                         "Fats" : Number(FatText)
+                  })
                 }
               )
               if (!response.ok) {

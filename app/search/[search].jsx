@@ -1,17 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TextInput, Alert, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, Alert, View, TouchableOpacity } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import AppButton from '../AppButton';
 
 const FoodTest = () => {
     const { search } = useLocalSearchParams();
 	const [foodData, setFoodData] = useState(null);
 	const [Success, setSuccess] = useState(false)
+	const router = useRouter();
+
+	function CreateRedirect(){
+		router.push('/CreateFood')
+	}
+
+	function LogRedirect(){
+		router.push(`/${search}`)
+	}
 
 	async function Attempt() {
 		try {
-			const response = await fetch("http://10.7.41.135:5000/search",
+			const response = await fetch("http://10.0.0.157:5000/search",
 				{ 
 					method: "POST", 
 					headers: {
@@ -43,7 +53,9 @@ const FoodTest = () => {
 	return (
 		<SafeAreaProvider>
 			<SafeAreaView style={styles.Topcontainer}>
-
+				<TouchableOpacity style={styles.imageButton} onPress={() => router.push('/FindAFood')}>
+					<AntDesign name="arrow-left" size={24} color="white" />
+				</TouchableOpacity>
 				<Text style={styles.title}>Searching for: {search}</Text>
 
 				<View style={styles.Centercontainer}>
@@ -53,7 +65,11 @@ const FoodTest = () => {
 					{!! Success && foodData && <Text style={styles.FoodPrint}> Carbs: {foodData.carbs} </Text>}
 					{!! Success && foodData && <Text style={styles.FoodPrint}> Fats: {foodData.fats} </Text>}
 				</View>
-			</SafeAreaView>
+				<View>
+					{!! Success && foodData && <AppButton title='Log This Food'onPress={() => LogRedirect()}/>}
+					{!! !Success && <AppButton title='Create Food'onPress={() => CreateRedirect()}/>}
+				</View>
+			</SafeAreaView>1
 		</SafeAreaProvider>
 	);
 }

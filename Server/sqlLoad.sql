@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS Food(
 -- so 100g of rice or 300g 93-7 ground Beef
 CREATE TABLE IF NOT EXISTS Servings(
 	ServingID INT AUTO_INCREMENT NOT NULL,
-    AmmountAte INT,
+    AmountAte INT,
     FoodID INT,
     FOREIGN KEY(FoodID) REFERENCES Food(FoodID),
     PRIMARY KEY(ServingID)
@@ -60,6 +60,6 @@ INSERT INTO User (UserName, CalorieGoal, ProteinGoal, CarbGoal, FatGoal) VALUES 
 -- Create A interaction between User and a Food
 INSERT INTO Interactions (UserID) VALUES (1);
 -- create a Serving
-INSERT INTO Servings (AmmountAte, FoodID) VALUES (2,3);
+INSERT INTO Servings (AmountAte, FoodID) VALUES (2,3);
 -- Create a Composed of table, including the interaction and the servings ate
 INSERT INTO Composed VALUES (1,1);

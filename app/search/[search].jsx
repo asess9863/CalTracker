@@ -9,11 +9,9 @@ const FoodTest = () => {
 	const [foodData, setFoodData] = useState(null);
 	const [Success, setSuccess] = useState(false)
 
-	console.log(search)
-
 	async function Attempt() {
 		try {
-			const response = await fetch("http://10.0.0.157:5000/search",
+			const response = await fetch("http://10.7.41.135:5000/search",
 				{ 
 					method: "POST", 
 					headers: {

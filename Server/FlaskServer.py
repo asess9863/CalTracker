@@ -42,7 +42,6 @@ def Search():
         sql = f"SELECT * FROM food WHERE Name = \"{Food}\""
         # two dimensional tuple so we need to go into the first result to get real data
         results = Query(sql)
-        print(results)
         row = results[0]
         return jsonify({
             "message": "Food received",
@@ -64,18 +63,39 @@ def Sum():
     print("Incoming JSON: ", data)
     UserName = data.get('UserName')
     print(UserName)
-    sql = f"""SELECT *
-          FROM food AS F
-          JOIN servings AS S ON F.FoodID = S.FoodID
-          JOIN composed AS C ON S.ServingID = C.ServingID
-          JOIN interactions AS I ON C.InteractionID = I.InteractionID
-          JOIN user AS U ON i.UserID = U.UserID
-          WHERE U.UserName = \"{UserName}\";"""
-    results = Query(sql)
-    print (results)
+    sql = f""" 
+        SELECT 
+            CAST(SUM(F.calories * S.AmountAte) AS SIGNED) AS TCAL,
+            CAST(SUM(F.protein  * S.AmountAte) AS SIGNED) AS TP,
+            CAST(SUM(F.carbs    * S.AmountAte) AS SIGNED) AS TCARB,
+            CAST(SUM(F.fats     * S.AmountAte) AS SIGNED) AS TF
+        FROM Servings AS S
+        JOIN Food AS F ON S.FoodID = F.FoodID
+        JOIN Composed AS C ON C.ServingID = S.ServingID
+        JOIN Interactions AS I ON C.InteractionID = I.InteractionID
+        WHERE I.UserID = 1;
+    """
+    Results = Query(sql)
+    print(Results[0][1])
+    return(jsonify({"results":{
+        "Calories": Results[0][0],
+        "Protein": Results[0][1],
+        "Carbs": Results[0][2],
+        "Fats": Results[0][3]}
+        }))
+@app.route('/CreateFood', methods=['POST'])
+def CreateFood():
+    data = request.get_json()
+    print("Incoming Data: ", data)
+    sql = f"""
+            INSERT INTO Food (Name, Calories, Protein, Carbs, Fats) 
+            VALUES (\"{data.get('Name')}\",{data.get('calories')},{data.get('protein')},{data.get('carbs')},{data.get('fats')})
+           """
+    Results = Query(sql)
     return(jsonify({
-        "Results": results
+        "Message": "Success"
     }))
+
 # run app
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5000)

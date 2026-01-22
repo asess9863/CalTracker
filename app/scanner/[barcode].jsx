@@ -15,6 +15,7 @@ const FoodDisplay = () => {
             const data = await res.json()
             if(data.status === 1)
             {
+                
                 setProduct(data.product)
             } else {
                 console.log('Product Not Found...')

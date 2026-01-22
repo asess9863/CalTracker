@@ -4,9 +4,12 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
 
 const Home = () => {
+    const [SummedData, SetSummedData] = useState('')
+    const [Success, setSuccess] = useState(false)
+
     async function Sum() {
 		try {
-			const response = await fetch("http://10.0.0.157:5000/Sum",
+			const response = await fetch("http://10.7.41.135:5000/Sum",
 				{ 
 					method: "POST", 
 					headers: {
@@ -22,8 +25,8 @@ const Home = () => {
 			else
 			{
 				const result = await response.json();
-				Alert.alert('Success', 'Data sent and response received!')
-				setSummedData(result.food);
+                SetSummedData(result)
+                console.log(SummedData)
 				setSuccess(true);
 			}
 		}
@@ -32,17 +35,19 @@ const Home = () => {
 			Alert.alert("Error", "Failed to connect to server");
 		}
 	}
-
-    useEffect(() => {Sum()});
-    
+    useEffect(() => {Sum()}, []);
 
     return (
         <SafeAreaProvider>
             <SafeAreaView style={styles.container}>
-                <Text style={styles.title}>
+                <Text styleo7={styles.title}>
                     Home Page
                 </Text>
                 <Link href={"/"} style={styles.link}>back to login</Link>
+                {!! Success && SummedData && <Text style={styles.FoodPrint}> Calories: {SummedData.results.Calories} </Text>}
+                {!! Success && SummedData && <Text style={styles.FoodPrint}> Protein: {SummedData.results.Protein} </Text>}
+                {!! Success && SummedData && <Text style={styles.FoodPrint}> Carbs: {SummedData.results.Carbs} </Text>}
+                {!! Success && SummedData && <Text style={styles.FoodPrint}> Fats: {SummedData.results.Fats} </Text>}
             </SafeAreaView>
         </SafeAreaProvider>
     );
@@ -61,6 +66,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 40,
     },
+    FoodPrint: {
+		textAlign: 'center',
+		margin: 15,
+		color: 'white',
+		fontSize: 25,
+	},
     input: {
         height: 40,
         margin: 15,

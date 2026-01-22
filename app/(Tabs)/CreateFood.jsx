@@ -1,19 +1,47 @@
-import React from 'react';
-import { Button, StyleSheet, TextInput, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Button, StyleSheet, TextInput, Text, View, Alert } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import CustomFoods from '../CustomFoodsClass'
 
 const CreateFood = () => {
-    const [ProteinText, onChangeProteinText] = React.useState('');
-    const [CarbText, onChangeCarbText] = React.useState('');
-    const [FatText, onChangeFatText] = React.useState('');
+    const [ProteinText, onChangeProteinText] = useState('');
+    const [CarbText, onChangeCarbText] = useState('');
+    const [FatText, onChangeFatText] = useState('');
     const [FoodNameText, onChangeFoodNameText] = React.useState('');
+    const [Success, setSuccess] = useState(false)
 
-    function FoodCreate(){
+    async function FoodCreate(){
         const CustomFood = new CustomFoods(Number(ProteinText), Number(CarbText), Number(FatText), FoodNameText)
-        FoodList = [];
-        FoodList.push(CustomFood);
+        try {
+              const response = await fetch("http://10.7.41.135:5000/CreateFood",
+                { 
+                  method: "POST", 
+                  headers: {
+                    'Content-type': 'application/json',
+                    "Accept": "application/json"
+                  },
+                  body: JSON.stringify({ "Name" : CustomFood.getName(),
+                                         "Calories" : CustomFood.getCalories(),
+                                         "Protein" : CustomFood.getProtein(),
+                                         "Carbs" : CustomFood.getCarbs(),
+                                         "Fats" : CustomFood.getFats()
+                   })
+                }
+              )
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              else
+              {
+                const result = await response.json();
+                setSuccess(true);
+              }
+            }
+            catch (error) {
+              console.error('Error sending data to Flask: ', error);
+              Alert.alert("Error", "Failed to connect to server");
+            }
     }
     return(
         <SafeAreaProvider>
@@ -54,7 +82,6 @@ const CreateFood = () => {
                       title='Create Food'
                       onPress={() => FoodCreate()}
                     />
-                    <Link style={styles.link} href={'/Home'}> Go home </Link>
                 </View>
             </SafeAreaView>
         </SafeAreaProvider>

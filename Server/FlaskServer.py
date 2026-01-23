@@ -101,16 +101,18 @@ def Logger():
     data = request.get_json()
     Name = data.get("Name")
     print("Incoming Data: ", data)
-    FoodNumber = f""" SELECT FoodID FROM Food WHERE Name = \"{Name}\" """
-    FoodResult = Query(FoodNumber)
-    print(FoodResult[0][0])
-    sql = f"""
-            INSERT INTO Interactions (UserID) VALUES (1);
-            SELECT LAST_INSERT_ID() AS InterID;
-            INSERT INTO Servings (AmountAte, FoodID) VALUES ({data.get("Servings")}, {FoodResult});
-            SELECT LAST_INSERT_ID() AS ServingID;
-            INSERT INTO Composed (InteractionID, ServingID) VALUES (InterID, ServingID)
-           """
+    sql = f""" SELECT FoodID FROM Food WHERE Name = \"{Name}\" """
+    FoodResult = Query(sql)
+    sql = f""" INSERT INTO Interactions (UserID) VALUES (1); 
+               SELECT LAST_INSERT_ID() AS InteractionID"""
+    Result = Query(sql)
+    InteractionID = Result['InteractionID'] if Result else None
+    sql = f""" INSERT INTO Servings (AmountAte, FoodID) VALUES ({data.get("Servings")}, {FoodResult}); 
+               SELECT LAST_INSERT_ID() AS ServingID"""
+    Result = Query(sql)
+    ServingID = Result['ServingID'] if Result else None
+    sql = f""" INSERT INTO Composed (InteractionID, ServingID) VALUES ({InteractionID}, {ServingID}) """
+    Query(sql)
     return(jsonify({
         "Message": "Success"
     }))

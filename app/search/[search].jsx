@@ -1,34 +1,42 @@
+// For Auto call on render and state management
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, Alert, View, TouchableOpacity } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+// Used to pass the food searched
 import { useLocalSearchParams, useRouter } from 'expo-router';
+// buttons
 import AntDesign from '@expo/vector-icons/AntDesign';
 import AppButton from '../AppButton';
 
 const FoodTest = () => {
+	// getting the name of the file and setting it to a variable
     const { search } = useLocalSearchParams();
 	const [foodData, setFoodData] = useState(null);
 	const [Success, setSuccess] = useState(false)
 	const router = useRouter();
 
+	// onPress function that redirects if a food doest exist
 	function CreateRedirect(){
 		router.push('/CreateFood')
 	}
 
+	// takes you to the [food].jsx file for further logging
 	function LogRedirect(){
 		router.push(`/${search}`)
 	}
 
 	async function Attempt() {
 		try {
-			const response = await fetch("http://10.7.41.135:5000/search",
+			// fetch the food info
+			const response = await fetch("http://10.0.0.157:5000/search",
 				{ 
 					method: "POST", 
 					headers: {
 						'Content-type': 'application/json',
 						"Accept": "application/json"
 					},
-					body: JSON.stringify({ title: search })
+					// pass the food name in the search variable
+					body: JSON.stringify({ Name: search })
 				}
 			)
 			if (!response.ok) {
@@ -36,7 +44,9 @@ const FoodTest = () => {
 			}
 			else
 			{
+				// get response back from server
 				const result = await response.json();
+				// alert user that their query was successful
 				Alert.alert('Success', 'Data sent and response received!')
 				setFoodData(result.food);
 				setSuccess(true);
@@ -48,40 +58,30 @@ const FoodTest = () => {
 		}
 	}
 
+	// auto call function on render, pass in search as a parameter
 	useEffect(() => {Attempt()}, [search]);
 
 	return (
 		<SafeAreaProvider>
-			<SafeAreaView style={styles.Topcontainer}>
+			<View style={styles.Centercontainer}>
 				<TouchableOpacity style={styles.imageButton} onPress={() => router.push('/FindAFood')}>
 					<AntDesign name="arrow-left" size={24} color="white" />
 				</TouchableOpacity>
 				<Text style={styles.title}>Searching for: {search}</Text>
-
-				<View style={styles.Centercontainer}>
-					{!! Success && foodData && <Text style={styles.FoodPrint}> Name: {foodData.name} </Text>}
-					{!! Success && foodData && <Text style={styles.FoodPrint}> Calories: {foodData.calories} </Text>}
-					{!! Success && foodData && <Text style={styles.FoodPrint}> Protein: {foodData.protein} </Text>}
-					{!! Success && foodData && <Text style={styles.FoodPrint}> Carbs: {foodData.carbs} </Text>}
-					{!! Success && foodData && <Text style={styles.FoodPrint}> Fats: {foodData.fats} </Text>}
-				</View>
-				<View>
-					{!! Success && foodData && <AppButton title='Log This Food'onPress={() => LogRedirect()}/>}
-					{!! !Success && <AppButton title='Create Food'onPress={() => CreateRedirect()}/>}
-				</View>
-			</SafeAreaView>1
+			
+				{!! Success && foodData && <Text style={styles.FoodPrint}> Name: {foodData.name} </Text>}
+				{!! Success && foodData && <Text style={styles.FoodPrint}> Calories: {foodData.calories} </Text>}
+				{!! Success && foodData && <Text style={styles.FoodPrint}> Protein: {foodData.protein} </Text>}
+				{!! Success && foodData && <Text style={styles.FoodPrint}> Carbs: {foodData.carbs} </Text>}
+				{!! Success && foodData && <Text style={styles.FoodPrint}> Fats: {foodData.fats} </Text>}
+				{!! Success && foodData && <AppButton title='Log This Food'onPress={() => LogRedirect()}/>}
+				{!! !Success && <AppButton title='Create Food'onPress={() => CreateRedirect()}/>}
+			</View>
 		</SafeAreaProvider>
 	);
 }
 
 const styles = StyleSheet.create({
-	Topcontainer: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'top',
-		backgroundColor: 'black',
-		padding: 24,
-	},
 	Centercontainer: {
 		flex: 1,
 		alignItems: 'center',
@@ -100,31 +100,12 @@ const styles = StyleSheet.create({
 		color: 'white',
 		fontSize: 25,
 	},
-	input: {
-		height: 40,
-		width: 350,
-		margin: 12,
-		borderWidth: 4,
-		borderColor: '#ffffffff',
-		color: 'white',
-		padding: 10,
-	},
-	link: {
-		textAlign: 'center',
-		marginTop: 12,
-		color: 'white',
-	},
-	imageLocation:
-	{
-		alignItems: 'center',
-		justifyContent: 'bottom',
-	},
-	image:
-	{
-		width: 75,
-		height: 75,
-		justifyContent: 'flex-end',
-	},
+	imageButton: {
+        position: 'absolute',
+        top: 15,
+        left: 10,
+        zIndex: 20,
+    },
 });
 
 export default FoodTest;

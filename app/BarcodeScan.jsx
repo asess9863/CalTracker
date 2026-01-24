@@ -5,31 +5,31 @@ import { useRouter } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function BarcodeScan() {
-    const [permission, requestPermission] = useCameraPermissions();
+    // use camera permissions makes a call to the phone settings to see if the permissions are turned off so we can do conditional rendering
+    const [permission, requestPermission] = useCameraPermissions(); 
     const [scanned, setScanned] = useState(false);
     const router = useRouter();
 
-    if (!permission) return <View />;
-
+    // conditional rendering for camera permissions
     if (!permission.granted) {
         return (
-            <View style={styles.permissionContainer}>
-                <Text style={styles.permissionText}>
+            <View style={styles.container}>
+                <Text style={styles.text}>
                     We need your permission to use the camera
                 </Text>
-                <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
-                    <Text style={styles.permissionButtonText}>Grant Permission</Text>
+                <TouchableOpacity style={styles.button} onPress={requestPermission}>
+                    <Text style={styles.text}>Grant Permission</Text>
                 </TouchableOpacity>
             </View>
         );
     }
 
+    // pass in barcode scanned
     const handleBarcodeScanned = ({ data }) => {
         if (scanned) return;   // prevent multiple scans
 
-        setScanned(true);
-        console.log("Scanned barcode:", data);
-
+        setScanned(true); // update after scan happen so that we can limit the numbers of times we send a code
+        // send code to [barcode].jsx via dynamic file name
         router.push(`scanner/${data}`)
     };
 
@@ -64,30 +64,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
-    message: {
-        textAlign: 'center',
-        paddingBottom: 10,
-    },
     camera: {
         flex: 1,
-    },
-    buttonContainer: {
-        position: 'absolute',
-        bottom: 50,
-        width: '100%',
-        alignItems: 'center',
-        zIndex: 10,
     },
     imageButton: {
         position: 'absolute',
         top: 15,
         left: 10,
         zIndex: 20,
-    },
-    image: {
-        width: 48,
-        height: 48,
-        resizeMode: 'contain',
     },
     button: {
         backgroundColor: '#000000aa',

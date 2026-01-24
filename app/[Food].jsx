@@ -1,21 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, Alert, View, TouchableOpacity, TextInput } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import AppButton from './AppButton';
 
 const logFood = () => {
 
+	// create router object for redirect
+	const router = useRouter();
+	// get Food name from dynamic file name
 	const { Food } = useLocalSearchParams();
     const [ServingsText, SetServingsText] = useState('')
-	const [FoodData, SetFoodData] = useState(null)
-	const [Success, setSuccess] = useState(false)
 
 	async function CallFoodLog(){
 		try {
-			console.log(Food)
-			const response = await fetch("http://10.7.41.135:5000/logFood",
+			// send a request to the server to log a food with a specific name and serving number
+			const response = await fetch("http://10.0.0.157:5000/logFood",
 				{ 
 					method: "POST", 
 					headers: {
@@ -31,9 +32,6 @@ const logFood = () => {
 			else
 			{
 				const result = await response.json();
-				Alert.alert('Success', 'Data sent and response received!')
-				SetFoodData(result.food);
-				setSuccess(true);
 			}
 		}
 		catch (error) {
@@ -44,7 +42,10 @@ const logFood = () => {
     return(
         <SafeAreaProvider>
             <View style={styles.container}>
-                <AntDesign name="arrow-left" size={24} color="white" />
+				{/* onPress function uses router.push to redirect to the find a food page when back button is pressed */}
+				<TouchableOpacity style={styles.imageButton} onPress={() => router.push('/FindAFood')}>
+					<AntDesign name="arrow-left" size={24} color="white" />
+				</TouchableOpacity>
                 <Text style={styles.title}> Logging { Food } </Text>
                 <TextInput
                     style={styles.input}
@@ -65,20 +66,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
-	Topcontainer: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'top',
-		backgroundColor: 'black',
-		padding: 12,
-	},
-	Centercontainer: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'top',
-		backgroundColor: 'black',
-		padding: 80,
-	},
 	title: {
 		color: 'white',
 		textAlign: 'center',
@@ -93,6 +80,12 @@ const styles = StyleSheet.create({
 		color: 'white',
 		padding: 10,
 	},
+	imageButton: {
+        position: 'absolute',
+        top: 15,
+        left: 10,
+        zIndex: 20,
+    },
 })
 
 export default logFood;

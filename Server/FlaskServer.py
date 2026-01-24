@@ -16,18 +16,18 @@ connection = pymysql.connect(
 print("Connected...")
 
 # make SQL queries and return a tuple of table results
-def Query(query):
+def Query(sql):
     with connection.cursor() as cursor:
-        try:
-            cursor.execute(query)
-        except Exception as e:
-            print ("oops... Something Went Wront :( Check", e)
-            return
-        result = cursor.fetchall()
-    connection.commit()
-    return result
+        cursor.execute(sql)
+        return cursor.fetchall()
 
-# starting page/ the only page that I have
+# make a SQL query and return the last inserted row id of that table
+def Execute(sql):
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        connection.commit()
+        return cursor.lastrowid
+
 @app.route('/search', methods=['POST'])
 # function for loading/working within the page
 def Search():
@@ -36,7 +36,7 @@ def Search():
         # get input from page
         data = request.get_json(force=True)
         print("Incoming JSON:", data)
-        Food = data.get('title')
+        Food = data.get('Name')
         print(Food)
         # SQL Query for food name
         sql = f"SELECT * FROM food WHERE Name = \"{Food}\""
@@ -59,10 +59,11 @@ def Search():
 
 @app.route('/Sum', methods=['POST'])
 def Sum():
+    # get info set from the client tier
     data = request.get_json()
-    print("Incoming JSON: ", data)
+    # Normally You would make a query to get the id from this. But I dont have time nor do I have multiple users so for now its hardcoded
     UserName = data.get('UserName')
-    print(UserName)
+    # this will sum each of the following categories when the interaction id is the correct id
     sql = f""" 
         SELECT 
             CAST(SUM(F.calories * S.AmountAte) AS SIGNED) AS TCAL,
@@ -72,26 +73,27 @@ def Sum():
         FROM Servings AS S
         JOIN Food AS F ON S.FoodID = F.FoodID
         JOIN Composed AS C ON C.ServingID = S.ServingID
-        JOIN Interactions AS I ON C.InteractionID
+        JOIN Interactions AS I ON I.InteractionID = C.InteractionID
         WHERE I.UserID = 1;
     """
+    # make the query happen
     Results = Query(sql)
-    print(Results[0][1])
+    # return results of the query
     return(jsonify({"results":{
         "Calories": Results[0][0],
         "Protein": Results[0][1],
         "Carbs": Results[0][2],
         "Fats": Results[0][3]}
         }))
+
 @app.route('/CreateFood', methods=['POST'])
 def CreateFood():
     data = request.get_json()
-    print("Incoming Data: ", data)
     sql = f"""
             INSERT INTO Food (Name, Calories, Protein, Carbs, Fats) 
             VALUES (\"{data.get('Name')}\",{data.get('Calories')},{data.get('Protein')},{data.get('Carbs')},{data.get('Fats')})
            """
-    Results = Query(sql)
+    Results = Execute(sql)
     return(jsonify({
         "Message": "Success"
     }))
@@ -103,19 +105,17 @@ def Logger():
     print("Incoming Data: ", data)
     sql = f""" SELECT FoodID FROM Food WHERE Name = \"{Name}\" """
     FoodResult = Query(sql)
-    sql = f""" INSERT INTO Interactions (UserID) VALUES (1); 
-               SELECT LAST_INSERT_ID() AS InteractionID"""
-    Result = Query(sql)
-    InteractionID = Result['InteractionID'] if Result else None
-    sql = f""" INSERT INTO Servings (AmountAte, FoodID) VALUES ({data.get("Servings")}, {FoodResult}); 
-               SELECT LAST_INSERT_ID() AS ServingID"""
-    Result = Query(sql)
-    ServingID = Result['ServingID'] if Result else None
+    foodID = FoodResult[0][0]
+    sql = f""" INSERT INTO Interactions (UserID) VALUES (1); """
+    InteractionID = Execute(sql)
+    sql = f""" INSERT INTO Servings (AmountAte, FoodID) VALUES ({data.get("Servings")}, {foodID}); """
+    ServingID = Execute(sql)
     sql = f""" INSERT INTO Composed (InteractionID, ServingID) VALUES ({InteractionID}, {ServingID}) """
-    Query(sql)
+    Execute(sql)
     return(jsonify({
         "Message": "Success"
     }))
+
 
 # run app
 if __name__ == '__main__':

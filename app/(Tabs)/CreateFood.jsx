@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, TextInput, Text, View, Alert } from 'react-native';
+import { StyleSheet, TextInput, Text, View, Alert } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import AppButton from '../AppButton';
 
 
 const CreateFood = () => {
@@ -8,10 +9,10 @@ const CreateFood = () => {
     const [CarbText, onChangeCarbText] = useState('');
     const [FatText, onChangeFatText] = useState('');
     const [FoodNameText, onChangeFoodNameText] = React.useState('');
-    const [Success, setSuccess] = useState(false)
 
     async function FoodCreate(){
         try {
+              // fetch info from create food route
               const response = await fetch("http://10.0.0.157:5000/CreateFood",
                 { 
                   method: "POST", 
@@ -19,6 +20,7 @@ const CreateFood = () => {
                     'Content-type': 'application/json',
                     "Accept": "application/json"
                   },
+                  // pass the info held inside the input boxes into their respective fields
                   body: JSON.stringify({ "Name" : FoodNameText,
                                          "Calories" : Number(ProteinText)*4 + Number(CarbText)*4 + Number(FatText)*9,
                                          "Protein" : Number(ProteinText),
@@ -33,7 +35,6 @@ const CreateFood = () => {
               else
               {
                 const result = await response.json();
-                setSuccess(true);
               }
             }
             catch (error) {
@@ -76,10 +77,7 @@ const CreateFood = () => {
                         placeholder='Enter Protein in g'
                         value={ProteinText}
                     />
-                    <Button
-                      title='Create Food'
-                      onPress={() => FoodCreate()}
-                    />
+                    <AppButton title='Create Food' onPress={() => FoodCreate()}/>
                 </View>
             </SafeAreaView>
         </SafeAreaProvider>
@@ -108,14 +106,6 @@ const styles = StyleSheet.create({
     color: 'white',
     padding: 10,
   },
-  link: {
-    textAlign: 'center',
-    marginTop: 12,
-    color: 'white',
-  },
-  Dropdown: {
-    color: 'white'
-  }
 });
 
 export default CreateFood;

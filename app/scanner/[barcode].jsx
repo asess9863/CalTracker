@@ -1,13 +1,71 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import AppButton from '../AppButton';
 
 const FoodDisplay = () => {
+    // pull barcode from file name from the redirect in BarcodeScan.jsx
     const { barcode } = useLocalSearchParams();
     const [product, setProduct ] = useState(null);
-    const [loading, setLoading] = useState(true);
 
+    async function LogRedirect(){
+		try {
+            // fetch a search with the name of the product scanned
+            const response = await fetch("http://10.0.0.157:5000/search",
+                { 
+                    method: "POST", 
+                    headers: {
+                        'Content-type': 'application/json',
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({ Name: product.product_name })
+                }
+            )
+            // if there isn't a response we want to add the food that is scanned to the data base so it can be found via searching
+            if (!response.ok) {
+                try {
+                        const response = await fetch("http://10.0.0.157:5000/CreateFood",
+                          { 
+                            method: "POST", 
+                            headers: {
+                              'Content-type': 'application/json',
+                              "Accept": "application/json"
+                            },
+                            body: JSON.stringify({ "Name" : product.product_name,
+                                                   "Calories" : product.nutriments["energy-kcal_serving"],
+                                                   "Protein" : product.nutriments["proteins_serving"],
+                                                   "Carbs" : product.nutriments["carbohydrates_serving"],
+                                                   "Fats" : product.nutriments["fat_serving"]
+                            })
+                          }
+                        )
+                        if (!response.ok) {
+                          throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        else
+                        {
+                          router.push(`../${product.product_name}`)
+                        }
+                    }
+                catch (error) {
+                console.error('Error sending data to Flask: ', error); }
+                        
+            }
+            // if its successful we push to [Food].jsx with the products name
+            else
+            {
+                router.push(`../${product.product_name}`)
+            }
+        }
+        catch (error) {
+            console.error('Error sending data to Flask: ', error);
+            Alert.alert("Error", "Failed to connect to server");
+        }
+	}
+
+    // function used to API call to external database openfoodfacts
     const GetData = async () => {
         try 
         {
@@ -15,7 +73,7 @@ const FoodDisplay = () => {
             const data = await res.json()
             if(data.status === 1)
             {
-                
+                // set the product
                 setProduct(data.product)
             } else {
                 console.log('Product Not Found...')
@@ -23,28 +81,24 @@ const FoodDisplay = () => {
         }
         catch(err){
             console.log("data fetch Failed: ", err)
-        } finally {
-            setLoading(false);
         }
     };
 
+    // run this on render with barcode as the param
     useEffect(() => {GetData()}, [barcode]);
-
-    if (loading) 
-    {
-        return <Text>Loading...</Text>;
-    }
 
     if(product === null)
     {
         return <Text style={styles.title}>Food Not Found!!</Text>
     }
 
-    console.log(product.nutriments["energy-kcal_serving"])
 
     return (
         <SafeAreaProvider>
             <View style={styles.container}>
+                <TouchableOpacity style={styles.imageButton} onPress={() => router.push('/FindAFood')}>
+                    <AntDesign name="arrow-left" size={24} color="white" />
+                </TouchableOpacity>
                 <Text style={styles.FoodPrint}> FoodDisplay Page </Text>
                 <Text style={styles.FoodPrint}> Name: {product.product_name} </Text>
                 <Text style={styles.FoodPrint}> ServingSize: {product.serving_size} </Text>
@@ -52,6 +106,7 @@ const FoodDisplay = () => {
                 <Text style={styles.FoodPrint}> Protein: {product.nutriments["proteins_serving"]} </Text>
                 <Text style={styles.FoodPrint}> Carbs: {product.nutriments["carbohydrates_serving"]} </Text>
                 <Text style={styles.FoodPrint}> Fats: {product.nutriments["fat_serving"]} </Text>
+                <AppButton title='Log This Food?' onPress={() => LogRedirect()}/>
             </View>
         </SafeAreaProvider>
     );
@@ -99,6 +154,12 @@ const styles = StyleSheet.create({
 		color: 'white',
 		fontSize: 25,
 	},
+    imageButton: {
+        position: 'absolute',
+        top: 15,
+        left: 10,
+        zIndex: 20,
+    },
 });
 
 

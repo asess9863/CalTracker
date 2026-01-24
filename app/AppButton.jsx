@@ -1,5 +1,5 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-
+// create a preset app button that takes in an onPress command, button title and a color for the container
 const AppButton = ({ onPress, title, backgroundColor }) => {
   return (
     <TouchableOpacity

@@ -7,6 +7,7 @@ export default function FindAFood(){
     
     const [Foodtext, SetFoodText] = React.useState('')
 
+    // if we search then we want to push whatever is into the input box into the dynamic file typing
     function SearchAttempt() {
       router.push(`../search/${Foodtext}`)
     }
@@ -68,8 +69,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 12,
     color: 'white',
-  },
-  Dropdown: {
-    color: 'white'
   },
 });
